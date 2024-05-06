@@ -1,0 +1,22 @@
+{
+  "name": "gpt-cloud-function",
+  "version": "1.0.0",
+  "description": "GCP HTTP Function to communicate with custom OpenAI GPT Assistant",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "functions-framework --target=TypescriptFunction",
+    "prestart": "npm run build",
+    "gcp-build": "npm run build",
+    "gcp-deploy": "npm run build && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --gen2 --allow-unauthenticated"
+  },
+  "keywords": [],
+  "author": "Attila Reterics",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
