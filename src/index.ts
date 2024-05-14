@@ -1,11 +1,12 @@
 import * as ff from '@google-cloud/functions-framework';
 import dotenv from 'dotenv';
-import {sendMessage} from "./assistant";
-import {ChatMessage} from "./types";
 
 dotenv.config({
     path: process.cwd() + '/.env'
 });
+
+import {sendMessage} from "./assistant";
+import {ChatMessage} from "./types";
 
 const supportedContentTypes = [
     'application/json',

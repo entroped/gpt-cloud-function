@@ -5,10 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "functions-framework --target=TypescriptFunction",
-    "prestart": "npm run build",
-    "gcp-build": "npm run build",
-    "gcp-deploy": "npm run build && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --gen2 --allow-unauthenticated"
+    "start": "functions-framework --target=gpt-cloud-function",
+    "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --gen2 --allow-unauthenticated"
   },
   "keywords": [],
   "author": "Attila Reterics",

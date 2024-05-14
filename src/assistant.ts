@@ -1,14 +1,18 @@
 import OpenAI from "openai";
-import config from "../assistant-config.json";
 import * as fs from "fs";
 import {delay} from "./utils";
 import {ChatMessage, ChatResponse} from "./types";
 
-
+console.log('Provided API:', process.env.OPENAI_API_KEY);
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 const pollingInterval = 5000;
+const config = {
+    NAME: process.env.NAME,
+    INSTRUCTIONS: process.env.INSTRUCTIONS,
+    INITIAL_INSTRUCTIONS: process.env.INITIAL_INSTRUCTIONS,
+}
 
 
 /**
@@ -19,8 +23,8 @@ const pollingInterval = 5000;
 export async function createAssistant(knowledgeSources: string[] = ["../knowledge.txt"]) {
     const assistant =  await openai.beta.assistants.create({
         instructions:
-        config.instructions,
-        name: config.name,
+        config.INSTRUCTIONS,
+        name: config.NAME,
         tools: [{type: "file_search"}],
         model: "gpt-3.5-turbo",
         response_format: {
@@ -29,7 +33,7 @@ export async function createAssistant(knowledgeSources: string[] = ["../knowledg
     });
 
     const vectorStore = await openai.beta.vectorStores.create({
-        name: config.name,
+        name: config.NAME,
     });
 
     const knowledgeBase = knowledgeSources
@@ -53,7 +57,7 @@ export async function createAssistant(knowledgeSources: string[] = ["../knowledg
 export async function getAssistant() {
     const assistants = await openai.beta.assistants.list();
     const matchingAssistant = assistants.data
-        .find(assistant => assistant.name === config.name)
+        .find(assistant => assistant.name === config.NAME)
     if (matchingAssistant) {
         return matchingAssistant;
     }
@@ -89,7 +93,7 @@ export async function sendMessage({content, threadId}: ChatMessage): Promise<Cha
         threadId,
         {
             assistant_id: assistant.id,
-            instructions: config.initial_instruction,
+            instructions: config.INITIAL_INSTRUCTIONS,
         }
     );
 
