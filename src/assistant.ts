@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import * as fs from "fs";
 import {delay} from "./utils";
 import {ChatMessage, ChatResponse} from "./types";
+import {Run} from "openai/resources/beta/threads";
+import LastError = Run.LastError;
 
 console.log('Provided API:', process.env.OPENAI_API_KEY);
 const openai = new OpenAI({
@@ -14,6 +16,25 @@ const config = {
     INITIAL_INSTRUCTIONS: process.env.INITIAL_INSTRUCTIONS,
 }
 
+export async function clearAssistants() {
+    const assistants = await openai.beta.assistants.list();
+
+    for(let i = 0; assistants.data[i]; i++) {
+        const assistant = assistants.data[i];
+
+        if (assistant) {
+            if (assistant.tool_resources &&
+                assistant.tool_resources.file_search &&
+                assistant.tool_resources.file_search.vector_store_ids) {
+                const vectorStoreId = assistant.tool_resources.file_search.vector_store_ids[0];
+                if (vectorStoreId) {
+                    await openai.beta.vectorStores.del(vectorStoreId);
+                }
+            }
+            await openai.beta.assistants.del(assistant.id);
+        }
+    }
+}
 
 /**
  * @name createAssistant
@@ -26,10 +47,10 @@ export async function createAssistant(knowledgeSources: string[] = ["../knowledg
         config.INSTRUCTIONS,
         name: config.NAME,
         tools: [{type: "file_search"}],
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo"/*,
         response_format: {
             type: "json_object"
-        }
+        }*/
     });
 
     const vectorStore = await openai.beta.vectorStores.create({
@@ -40,10 +61,13 @@ export async function createAssistant(knowledgeSources: string[] = ["../knowledg
         .filter(source => fs.existsSync(source))
         .map(path=> fs.createReadStream(path));
     if (knowledgeBase.length) {
-        await openai.beta.vectorStores.fileBatches.uploadAndPoll(vectorStore.id, {files: knowledgeBase})
-        await openai.beta.assistants.update(assistant.id, {
-            tool_resources: { file_search: { vector_store_ids: [vectorStore.id] } },
-        });
+        const result = await openai.beta.vectorStores.fileBatches.uploadAndPoll(vectorStore.id, {files: knowledgeBase})
+        if (result.vector_store_id) {
+            await openai.beta.assistants.update(assistant.id, {
+                tool_resources: { file_search: { vector_store_ids: [result.vector_store_id] } },
+            });
+        }
+
     }
 
     return assistant;
@@ -99,19 +123,37 @@ export async function sendMessage({content, threadId}: ChatMessage): Promise<Cha
 
     let result,
         retrieve,
-        status = run.status;
+        status = run.status,
+        maximumTries = 0,
+        lastError;
 
 
-    while (run.status === 'queued' || run.status === 'in_progress') {
+    while (status === 'queued' || status === 'in_progress') {
         try {
             retrieve = await openai.beta.threads.runs.retrieve(threadId, run.id);
+            status = retrieve.status;
+            maximumTries++;
 
             if (retrieve.status === "completed") {
-                result = await openai.beta.threads.messages.list(threadId);
+                const list = await openai.beta.threads.messages.list(threadId);
+                if (list && Array.isArray(list.data)) {
+                    result = list.data;
+                } else {
+                    lastError = {
+                        code: "server_error",
+                        message: "Response doesn't contain valid message thread"
+                    } as LastError;
+                }
                 break;
             } else if (retrieve.status === "queued" || retrieve.status === "in_progress") {
                 // Polling delay to prevent too frequent requests
+                if (maximumTries >= 10) {
+                    console.log('Timeout ' + maximumTries + ' seconds');
+                    break;
+                }
                 await delay(pollingInterval); // 5 seconds delay
+            } else if (retrieve.status === "failed" && retrieve.last_error) {
+                lastError = retrieve.last_error;
             } else {
                 console.log(`Unexpected Run status: ${retrieve.status}`);
                 break;
@@ -125,6 +167,8 @@ export async function sendMessage({content, threadId}: ChatMessage): Promise<Cha
     return {
         result: result,
         threadId: threadId,
-        status: status
+        status: status,
+        runId: run.id,
+        lastError: lastError
     }
 }

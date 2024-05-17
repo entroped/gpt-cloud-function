@@ -5,7 +5,7 @@ dotenv.config({
     path: process.cwd() + '/.env'
 });
 
-import {sendMessage} from "./assistant";
+import {clearAssistants, sendMessage} from "./assistant";
 import {ChatMessage} from "./types";
 
 const supportedContentTypes = [
@@ -13,7 +13,16 @@ const supportedContentTypes = [
     'application/x-www-form-urlencoded'
 ];
 
+console.log('Clear assistants');
+// Clear assistants on startup
+clearAssistants().then(r => {
+    console.log('Assistants successfully cleared');
+});
+
 ff.http('gpt-cloud-function', async (req: ff.Request, res: ff.Response) => {
+    // Allow CORS Headers
+    res.set('Access-Control-Allow-Origin', '*');
+
     if (req.method === 'OPTIONS') {
         // Send response to OPTIONS requests
         res.set('Access-Control-Allow-Methods', 'POST');

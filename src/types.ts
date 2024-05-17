@@ -1,4 +1,7 @@
-import {MessagesPage, RunStatus} from "openai/resources/beta/threads";
+import {Run, RunStatus, ThreadCreateParams, Message} from "openai/resources/beta/threads";
+import LastError = Run.LastError;
+
+
 
 export interface ChatMessage {
     content: string,
@@ -6,7 +9,9 @@ export interface ChatMessage {
 }
 
 export interface ChatResponse {
-    result?:  MessagesPage,
+    result?:  Message[],
     threadId: string,
-    status: RunStatus
+    status: RunStatus,
+    runId?: string,
+    lastError?: LastError
 }
