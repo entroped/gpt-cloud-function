@@ -1,0 +1,230 @@
+openapi: 3.0.3
+info:
+  title: GPT Conversational API
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://localhost:8080
+paths:
+  /:
+    post:
+      summary: Send a message to the server
+      description: Send a message to the server
+      operationId: sendAMessageToTheServer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                result:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      assistant_id:
+                        type: string
+                        example: string
+                      attachments:
+                        type: array
+                        items: {}
+                        example: []
+                      content:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            text:
+                              type: object
+                              properties:
+                                annotations:
+                                  type: array
+                                  items: {}
+                                  example: []
+                                value:
+                                  type: string
+                                  example: string
+                            type:
+                              type: string
+                              example: text
+                        example:
+                          - text:
+                              annotations: []
+                              value: string
+                            type: text
+                      created_at:
+                        type: number
+                        example: 0
+                      id:
+                        type: string
+                        example: string
+                      metadata:
+                        type: object
+                        properties: {}
+                      object:
+                        type: string
+                        example: string
+                      role:
+                        type: string
+                        example: assistant
+                      run_id:
+                        type: string
+                        example: string
+                      thread_id:
+                        type: string
+                        example: string
+                  example:
+                    - assistant_id: string
+                      attachments: []
+                      content:
+                        - text:
+                            annotations: []
+                            value: string
+                          type: text
+                      created_at: 0
+                      id: string
+                      metadata: {}
+                      object: string
+                      role: assistant
+                      run_id: string
+                      thread_id: string
+                runId:
+                  type: string
+                  example: string
+                status:
+                  type: string
+                  example: string
+                threadId:
+                  type: string
+                  example: string
+            examples:
+              Send a message to the server:
+                value:
+                  result:
+                    - assistant_id: string
+                      attachments: []
+                      content:
+                        - text:
+                            annotations: []
+                            value: string
+                          type: text
+                      created_at: 0
+                      id: string
+                      metadata: {}
+                      object: string
+                      role: assistant
+                      run_id: string
+                      thread_id: string
+                  runId: string
+                  status: string
+                  threadId: string
+      responses:
+        '200':
+          description: Server response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        assistant_id:
+                          type: string
+                          example: string
+                        attachments:
+                          type: array
+                          items: {}
+                          example: []
+                        content:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              text:
+                                type: object
+                                properties:
+                                  annotations:
+                                    type: array
+                                    items: {}
+                                    example: []
+                                  value:
+                                    type: string
+                                    example: string
+                              type:
+                                type: string
+                                example: text
+                          example:
+                            - text:
+                                annotations: []
+                                value: string
+                              type: text
+                        created_at:
+                          type: number
+                          example: 0
+                        id:
+                          type: string
+                          example: string
+                        metadata:
+                          type: object
+                          properties: {}
+                        object:
+                          type: string
+                          example: string
+                        role:
+                          type: string
+                          example: assistant
+                        run_id:
+                          type: string
+                          example: string
+                        thread_id:
+                          type: string
+                          example: string
+                    example:
+                      - assistant_id: string
+                        attachments: []
+                        content:
+                          - text:
+                              annotations: []
+                              value: string
+                            type: text
+                        created_at: 0
+                        id: string
+                        metadata: {}
+                        object: string
+                        role: assistant
+                        run_id: string
+                        thread_id: string
+                  runId:
+                    type: string
+                    example: string
+                  status:
+                    type: string
+                    example: string
+                  threadId:
+                    type: string
+                    example: string
+              examples:
+                Server response:
+                  value:
+                    result:
+                      - assistant_id: string
+                        attachments: []
+                        content:
+                          - text:
+                              annotations: []
+                              value: string
+                            type: text
+                        created_at: 0
+                        id: string
+                        metadata: {}
+                        object: string
+                        role: assistant
+                        run_id: string
+                        thread_id: string
+                    runId: string
+                    status: string
+                    threadId: string
+tags: []

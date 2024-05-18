@@ -44,6 +44,71 @@ npm run build
 npm run gcp-deploy
 ```
 
+### Using the API
+
+You can use the function at http://localhost:8080/ locally and/or with your Cloud Function Public URL via HTTP Post methods.
+
+- [OpenAPI 3 Documentation](./docs/openapi.yaml)
+- [Example Postman Collection](./docs/gpt-cloud-function.postman_collection.json)
+
+#### Steps
+
+Initially you will need to send an starting message to the Assistant with the following format:
+```json
+{
+   "content": "Tell me about Quick Chat API"
+}
+```
+
+The answer will have the **threadId**, **status**, **runId** and the **result** array with the message thread.
+
+
+```json
+{
+   "result": [
+      {
+         "id": "string",
+         "object": "string",
+         "created_at": 0,
+         "assistant_id": "string",
+         "thread_id": "string",
+         "run_id": "string",
+         "role": "assistant",
+         "content": [
+            {
+               "type": "text",
+               "text": {
+                  "value": "Hi, I am happy to help.",
+                  "annotations": []
+               }
+            },
+            {
+               "type": "text",
+               "text": {
+                  "value": "Tell me about Quick Chat API",
+                  "annotations": []
+               }
+            }
+         ],
+         "attachments": [],
+         "metadata": {}
+      }
+   ],
+   "threadId": "string",
+   "status": "string",
+   "runId": "string"
+}
+```
+
+Extract the threadId, and use it in the next message from now on to continue the conversation.
+
+```json
+{
+"content": "This is my second question",
+"threadId": "{{threadId}}"
+}
+```
+
 ## Contribute
 
 There are many ways to [contribute](https://github.com/entroped/gpt-cloud-function/blob/main/CONTRIBUTING.md) to GPT Cloud Functions.

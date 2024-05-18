@@ -5,7 +5,7 @@ import {ChatMessage, ChatResponse} from "./types";
 import {Run} from "openai/resources/beta/threads";
 import LastError = Run.LastError;
 
-console.log('Provided API:', process.env.OPENAI_API_KEY);
+
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
@@ -104,6 +104,7 @@ export async function sendMessage({content, threadId}: ChatMessage): Promise<Cha
         threadId = thread.id;
     }
 
+    console.log('Get Assistant');
     const assistant = await getAssistant();
 
     // Append our message to the current thread
@@ -128,6 +129,7 @@ export async function sendMessage({content, threadId}: ChatMessage): Promise<Cha
         lastError;
 
 
+    console.log('Waiting answer');
     while (status === 'queued' || status === 'in_progress') {
         try {
             retrieve = await openai.beta.threads.runs.retrieve(threadId, run.id);

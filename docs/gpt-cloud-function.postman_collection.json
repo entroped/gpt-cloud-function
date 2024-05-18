@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "12d1b4d2-472c-48f6-b767-67f2e76284ef",
+		"name": "GPT Conversational API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31389998"
+	},
+	"item": [
+		{
+			"name": "Send a message to the server",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Save ThreadId', function() {\r",
+							"    const result = pm.response.json();\r",
+							"    if (result.threadId) {\r",
+							"        pm.collectionVariables.set(\"threadId\", result.threadId);\r",
+							"    }\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Tell me about Quick Chat API\",\n    \"threadId\": \"{{threadId}}\"\n}",
+					"options": {
+						"raw": {
+							"headerFamily": "json",
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Server response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"result\": [\n        {\n            \"id\": \"string\",\n            \"object\": \"string\",\n            \"created_at\": 0,\n            \"assistant_id\": \"string\",\n            \"thread_id\": \"string\",\n            \"run_id\": \"string\",\n            \"role\": \"assistant\",\n            \"content\": [\n                {\n                    \"type\": \"text\",\n                    \"text\": {\n                        \"value\": \"string\",\n                        \"annotations\": []\n                    }\n                }\n            ],\n            \"attachments\": [],\n            \"metadata\": {}\n        }\n    ],\n    \"threadId\": \"string\",\n    \"status\": \"string\",\n    \"runId\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"result\": [\n        {\n            \"id\": \"string\",\n            \"object\": \"string\",\n            \"created_at\": 0,\n            \"assistant_id\": \"string\",\n            \"thread_id\": \"string\",\n            \"run_id\": \"string\",\n            \"role\": \"assistant\",\n            \"content\": [\n                {\n                    \"type\": \"text\",\n                    \"text\": {\n                        \"value\": \"string\",\n                        \"annotations\": []\n                    }\n                }\n            ],\n            \"attachments\": [],\n            \"metadata\": {}\n        }\n    ],\n    \"threadId\": \"string\",\n    \"status\": \"string\",\n    \"runId\": \"string\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "threadId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
