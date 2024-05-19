@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "functions-framework --target=gpt-cloud-function",
+    "prepare": "npm run build",
+    "predeploy": "npm run build",
     "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --gen2 --allow-unauthenticated"
   },
   "keywords": [],
