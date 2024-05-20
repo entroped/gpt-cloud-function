@@ -1,7 +1,5 @@
-import {Run, RunStatus, ThreadCreateParams, Message} from "openai/resources/beta/threads";
+import {Run, RunStatus, Message} from "openai/resources/beta/threads";
 import LastError = Run.LastError;
-
-
 
 export interface ChatMessage {
     content: string,
@@ -14,4 +12,17 @@ export interface ChatResponse {
     status: RunStatus,
     runId?: string,
     lastError?: LastError
+}
+
+export interface AssistantConfig {
+    NAME?: string,
+    INSTRUCTIONS?: string,
+    INITIAL_INSTRUCTIONS?: string,
+}
+
+export interface AssistantDefaults {
+    NAME: string,
+    INSTRUCTIONS: string,
+    INITIAL_INSTRUCTIONS: string,
+    pollingInterval: number,
 }

@@ -8,13 +8,14 @@
     "start": "functions-framework --target=gpt-cloud-function",
     "prepare": "npm run build",
     "predeploy": "npm run build",
-    "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --gen2 --allow-unauthenticated"
+    "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --allow-unauthenticated --env-vars-file .env.yaml"
   },
   "keywords": [],
   "author": "Attila Reterics",
   "license": "MIT",
   "dependencies": {
     "@google-cloud/functions-framework": "^3.4.0",
+    "@google-cloud/secret-manager": "^5.5.0",
     "dotenv": "^16.4.5",
     "openai": "^4.42.0"
   },

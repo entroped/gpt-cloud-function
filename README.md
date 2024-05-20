@@ -11,11 +11,15 @@ It is perfectly suitable to use as a Customer Support.
 ### Retrieving OpenAI API Key
  - Go to [Openai API Keys](https://platform.openai.com/api-keys) page and create an API key for this project
    - Permissions should be write to Assistants, Threads, and Files.
- - Add your API key into .env file
+ - Add API key (2 options)
+   - Via [GCP Secret Manager](https://console.cloud.google.com/security/secret-manager): You need to create a secret and put its name into .env.yaml file ,(refer to[.env.yaml.example](.env.yaml.example))
+    ```bash
+    OPENAI_SECRET_NAME=projects/0020090084006/secrets/OPENAI_API_KEY
+   ```
+   - Manually: Put API key into .env file
     ```bash
     OPENAI_API_KEY=Your API KEY
    ```
-    - (Optional) - You can use Google Cloud Key Management Service to handle .env variables in the cloud
 
 
 ### Local Testing
