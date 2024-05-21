@@ -31,6 +31,7 @@ export class AssistantManager {
     async clear() {
         const assistants = await this._openai.beta.assistants.list();
 
+        let deleted = 0;
         for(let i = 0; assistants.data[i]; i++) {
             const assistant = assistants.data[i];
 
@@ -44,8 +45,10 @@ export class AssistantManager {
                     }
                 }
                 await this._openai.beta.assistants.del(assistant.id);
+                deleted++;
             }
         }
+        return deleted;
     }
 
     /**
