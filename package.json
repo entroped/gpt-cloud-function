@@ -8,7 +8,8 @@
     "start": "functions-framework --target=gpt-cloud-function",
     "prepare": "npm run build",
     "predeploy": "npm run build",
-    "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --region=us-central1 --runtime nodejs20 --trigger-http --allow-unauthenticated --env-vars-file .env.yaml"
+    "gcp-deploy": "tsc && gcloud functions deploy gpt-cloud-function --gen2 --region=us-central1 --runtime nodejs20 --trigger-http --no-allow-unauthenticated --env-vars-file .env.yaml",
+    "gcp-gateway-deploy": "cd gateway && node ./gateway.js"
   },
   "keywords": [],
   "author": "Attila Reterics",
@@ -20,6 +21,7 @@
     "openai": "^4.42.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "yaml": "^2.4.5"
   }
 }
