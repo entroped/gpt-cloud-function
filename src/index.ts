@@ -8,6 +8,7 @@ dotenv.config({
 import {AssistantManager} from "./assistant";
 import {ChatMessage} from "./types";
 import {getOpenApiSecret} from "./utils";
+import {CryptoModule} from "./lib/crypto";
 
 const supportedContentTypes = [
     'application/json',
@@ -20,6 +21,7 @@ const initialConfig = {
     INITIAL_INSTRUCTIONS: process.env.INITIAL_INSTRUCTIONS,
 }
 let assistantManager: undefined|AssistantManager;
+const cryptoManager = new CryptoModule(process.env.DAILY_PASSWORD || 'daily_password');
 
 if (process.env.OPENAI_API_KEY) {
     assistantManager = new AssistantManager(process.env.OPENAI_API_KEY, initialConfig);
@@ -55,11 +57,19 @@ ff.http('gpt-cloud-function', async (req: ff.Request, res: ff.Response) => {
             return res.sendStatus(400);
         }
         if (!req.body || !req.body.content) {
-            // Bas Request === Missing the whole body or the content
+            // Bad Request === Missing the whole body or the content
             return res.status(400).send('Missing one or more required fields: content');
         }
+        cryptoManager.setPassword(process.env.DAILY_PASSWORD || 'daily_password');
+
+        const isEncrypted = cryptoManager.isEncrypted(req.body.content)
+        req.body.content = isEncrypted ? cryptoManager.decrypt(req.body.content) : req.body.content;
+        if (!req.body.content || typeof req.body.content !== 'string') {
+            return res.status(400).send('Invalid content. Encryption error or data missing');
+        }
+
         const response = await assistantManager.send(req.body as ChatMessage);
-        res.status(200).send(response);
+        res.status(200).send(isEncrypted ? cryptoManager.encrypt(JSON.stringify(response)) : response);
     } else if (req.method === 'DELETE') {
         const cleared = await assistantManager.clear();
         res.status(200).send(cleared);
