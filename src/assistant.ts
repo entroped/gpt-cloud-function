@@ -61,7 +61,7 @@ export class AssistantManager {
             instructions:
             this._config.INSTRUCTIONS,
             name: this._config.NAME,
-            tools: [{type: "file_search"}],
+            tools: [{type: "file_search"}, {type: "code_interpreter"}],
             model: "gpt-3.5-turbo"/*,
         response_format: {
             type: "json_object"
